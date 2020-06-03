@@ -1,0 +1,25 @@
+version: 2
+mergeable:
+- when: pull_request.*
+  validate:
+  - do: description
+    no_empty:
+      enabled: true
+      message: 'Description matter and should not be empty. Provide detail with **what** was changed, **why** it was changed, and **how** it was changed.'
+  - do: approvals
+    min:
+      count: 2
+      message: 'We require at least 2 reviewers.'
+    required:
+      reviewers: [martinvizvary, coufalja]
+    block:
+      changes_requested: true
+  - do: title
+    must_include:
+      regex: 'TRIVIAL|([A-Z]+-\d+)'
+      regex_flag: 'none' # Optional. Specify the flag for Regex. default is 'i', to disable default use 'none'
+      message: 'Pull request title must include `TRIVIAL` or jira ticket number. '
+    must_exclude:
+      regex: 'DO NOT MERGE|WIP'
+      regex_flag: 'none' # Optional. Specify the flag for Regex. default is 'i', to disable default use 'none'
+      message: 'Pull request title must not include WIP or DO NOT MERGE'
