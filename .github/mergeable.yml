@@ -1,25 +1,63 @@
 version: 2
 mergeable:
 - when: pull_request.*, pull_request_review.*
+  name: 'plus2'
   validate:
-  - do: description
-    no_empty:
-      enabled: true
-      message: 'Description matter and should not be empty. Provide detail with **what** was changed, **why** it was changed, and **how** it was changed.'
   - do: approvals
     min:
-      count: 2
-      message: 'We require at least 2 reviewers.'
+      count: 1
+      message: 'We require at least 1 reviewer from delta team.'
     required:
-      reviewers: [martinvizvary]
+      owners: true
+      #reviewers: [ martinvizvary, coufalja ]
     block:
       changes_requested: true
-  - do: title
-    must_include:
-      regex: 'TRIVIAL|([A-Z]+-\d+)'
-      regex_flag: 'none' # Optional. Specify the flag for Regex. default is 'i', to disable default use 'none'
-      message: 'Pull request title must include `TRIVIAL` or jira ticket number. '
-    must_exclude:
-      regex: 'DO NOT MERGE|WIP'
-      regex_flag: 'none' # Optional. Specify the flag for Regex. default is 'i', to disable default use 'none'
-      message: 'Pull request title must not include WIP or DO NOT MERGE'
+
+  fail:
+  - do: checks # default fail case
+    status: 'failure' # Can be: success, failure, neutral, cancelled, timed_out, or action_required
+    payload:
+      title: "Approval check {{toUpperCase validationStatus}}, more in details ➡"
+      summary: |
+        ### Status: {{toUpperCase validationStatus}}
+             Here are some stats of the run:
+             {{validationCount}} validations were ran.
+             {{passCount}} PASSED
+             {{failCount}} FAILED
+      text: "{{#each validationSuites}}\n
+              #### {{{statusIcon status}}} Validator: {{toUpperCase name}}\n
+              {{#each validations }} * {{{statusIcon status}}} ***{{{ description }}}***\n
+                     Input : {{{details.input}}}\n
+                     Settings : {{{displaySettings details.settings}}}\n
+                     {{/each}}\n
+              {{/each}}"
+
+- when: pull_request.*, pull_request_review.*
+  name: 'plus1'
+  validate:
+  - do: approvals
+    min:
+      count: 1
+      message: 'We require at least 1 reviewer from developers.'
+    block:
+      changes_requested: true
+
+  fail:
+  - do: checks # default fail case
+    status: 'failure' # Can be: success, failure, neutral, cancelled, timed_out, or action_required
+    payload:
+      title: "Approval check {{toUpperCase validationStatus}}, more in details ➡"
+      summary: |
+        ### Status: {{toUpperCase validationStatus}}
+             Here are some stats of the run:
+             {{validationCount}} validations were ran.
+             {{passCount}} PASSED
+             {{failCount}} FAILED
+      text: "{{#each validationSuites}}\n
+              #### {{{statusIcon status}}} Validator: {{toUpperCase name}}\n
+              {{#each validations }} * {{{statusIcon status}}} ***{{{ description }}}***\n
+                     Input : {{{details.input}}}\n
+                     Settings : {{{displaySettings details.settings}}}\n
+                     {{/each}}\n
+              {{/each}}"
+
