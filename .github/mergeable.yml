@@ -1,6 +1,6 @@
 version: 2
 mergeable:
-- when: pull_request.*
+- when: pull_request.*, pull_request_review.*
   validate:
   - do: description
     no_empty:
@@ -11,7 +11,7 @@ mergeable:
       count: 2
       message: 'We require at least 2 reviewers.'
     required:
-      reviewers: [martinvizvary, coufalja]
+      reviewers: [martinvizvary]
     block:
       changes_requested: true
   - do: title
