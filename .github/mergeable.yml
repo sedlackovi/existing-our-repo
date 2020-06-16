@@ -1,0 +1,63 @@
+version: 2
+mergeable:
+- when: pull_request.*, pull_request_review.*
+  name: 'plus2'
+  validate:
+  - do: approvals
+    min:
+      count: 1
+      message: 'We require at least 1 reviewer from delta team.'
+    required:
+      owners: true
+      #reviewers: [ martinvizvary, coufalja ]
+    block:
+      changes_requested: true
+
+  fail:
+  - do: checks # default fail case
+    status: 'failure' # Can be: success, failure, neutral, cancelled, timed_out, or action_required
+    payload:
+      title: "Approval check {{toUpperCase validationStatus}}, more in details ➡"
+      summary: |
+        ### Status: {{toUpperCase validationStatus}}
+             Here are some stats of the run:
+             {{validationCount}} validations were ran.
+             {{passCount}} PASSED
+             {{failCount}} FAILED
+      text: "{{#each validationSuites}}\n
+              #### {{{statusIcon status}}} Validator: {{toUpperCase name}}\n
+              {{#each validations }} * {{{statusIcon status}}} ***{{{ description }}}***\n
+                     Input : {{{details.input}}}\n
+                     Settings : {{{displaySettings details.settings}}}\n
+                     {{/each}}\n
+              {{/each}}"
+
+- when: pull_request.*, pull_request_review.*
+  name: 'plus1'
+  validate:
+  - do: approvals
+    min:
+      count: 1
+      message: 'We require at least 1 reviewer from developers.'
+    block:
+      changes_requested: true
+
+  fail:
+  - do: checks # default fail case
+    status: 'failure' # Can be: success, failure, neutral, cancelled, timed_out, or action_required
+    payload:
+      title: "Approval check {{toUpperCase validationStatus}}, more in details ➡"
+      summary: |
+        ### Status: {{toUpperCase validationStatus}}
+             Here are some stats of the run:
+             {{validationCount}} validations were ran.
+             {{passCount}} PASSED
+             {{failCount}} FAILED
+      text: "{{#each validationSuites}}\n
+              #### {{{statusIcon status}}} Validator: {{toUpperCase name}}\n
+              {{#each validations }} * {{{statusIcon status}}} ***{{{ description }}}***\n
+                     Input : {{{details.input}}}\n
+                     Settings : {{{displaySettings details.settings}}}\n
+                     {{/each}}\n
+              {{/each}}"
+
