@@ -1,26 +1,26 @@
 on: 
   push
-  pull_request:
-    types:
-  	- assigned
-    - unassigned
-    - labeled
-    - unlabeled
-    - opened
-    - edited
-    - closed
-    - reopened
-    - synchronize
-    - ready_for_review
-    - locked
-    - unlocked
-    - review_requested
-    - review_request_removed
+  #  pull_request:
+  #  types:
+  #	- assigned
+  #  - unassigned
+  #  - labeled
+  #  - unlabeled
+  #  - opened
+  #  - edited
+  # - closed
+  #  - reopened
+  #  - synchronize
+  #  - ready_for_review
+  #  - locked
+  #  - unlocked
+  #  - review_requested
+  #  - review_request_removed
 
-  pull_request_review:
-    types:
-    - edited
-    - dismissed 
+  #pull_request_review:
+  #  types:
+  #  - edited
+  #  - dismissed 
 name: Debug action
 jobs:
   debug:
