@@ -1,0 +1,9 @@
+on: [push, pull_request, pull_request_review ]
+name: Debug action
+jobs:
+  debug:
+    name: debug
+    runs-on: ubuntu-latest
+    steps:
+    - name: debug
+      uses: hmarr/debug-action@v1.0.0
